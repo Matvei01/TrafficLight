@@ -42,10 +42,54 @@ final class TLViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var startButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .systemRed
+        button.titleLabel?.font = .systemFont(ofSize: 24, weight: .semibold)
+        button.setTitle("START", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(startButtonPressed), for: .touchUpInside)
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     // MARK: - Override Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        redLight.layer.cornerRadius = redLight.frame.width / 2
+        yellowLight.layer.cornerRadius = redLight.frame.width / 2
+        greenLight.layer.cornerRadius = redLight.frame.width / 2
+    }
+}
+
+// MARK: - Action
+private extension TLViewController {
+    @objc func startButtonPressed() {
+        if startButton.currentTitle == "START" {
+            startButton.setTitle("NEXT", for: .normal)
+            startButton.backgroundColor = .systemBlue
+        }
+        
+        switch currentLight {
+        case .red:
+            greenLight.alpha = lightIsOff
+            redLight.alpha = lightIsOn
+            currentLight = .yellow
+        case .yellow:
+            redLight.alpha = lightIsOff
+            yellowLight.alpha = lightIsOn
+            currentLight = .green
+        case .green:
+            greenLight.alpha = lightIsOn
+            yellowLight.alpha = lightIsOff
+            currentLight = .red
+        }
     }
 }
 
@@ -59,7 +103,8 @@ private extension TLViewController {
     
     func addSubviews() {
         setupSubviews(
-            TLStackView
+            TLStackView,
+            startButton
         )
     }
     
@@ -84,6 +129,7 @@ private extension TLViewController {
     func setConstraints() {
         setConstraintsForTLStackView()
         setConstraintsForRedLight()
+        setConstraintsForStartButton()
     }
     
     func setConstraintsForTLStackView() {
@@ -104,6 +150,23 @@ private extension TLViewController {
         NSLayoutConstraint.activate([
             redLight.widthAnchor.constraint(
                 equalTo: redLight.heightAnchor, multiplier: 1/1
+            )
+        ])
+    }
+    
+    func setConstraintsForStartButton() {
+        NSLayoutConstraint.activate([
+            startButton.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40
+            ),
+            startButton.centerXAnchor.constraint(
+                equalTo: view.centerXAnchor
+            ),
+            startButton.widthAnchor.constraint(
+                equalTo: view.widthAnchor, multiplier: 0.5
+            ),
+            startButton.heightAnchor.constraint(
+                equalToConstant: 50
             )
         ])
     }
