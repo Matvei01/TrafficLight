@@ -33,7 +33,6 @@ final class TLViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             redLight, yellowLight, greenLight
         ])
-        stackView.contentMode = .scaleToFill
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 43
@@ -63,8 +62,8 @@ final class TLViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         redLight.layer.cornerRadius = redLight.frame.width / 2
-        yellowLight.layer.cornerRadius = redLight.frame.width / 2
-        greenLight.layer.cornerRadius = redLight.frame.width / 2
+        yellowLight.layer.cornerRadius = yellowLight.frame.width / 2
+        greenLight.layer.cornerRadius = greenLight.frame.width / 2
     }
 }
 
